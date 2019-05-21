@@ -342,6 +342,9 @@ def main():
     # in a text file within the virtual media floppy.
 
     if params.get('boot_method') == 'vmedia':
+        LOG.debug("Erasing old filesystems")
+        utils.execute('/usr/bin/erase-oldfs.sh')
+
         LOG.info("This node is booted with vmedia. Checking for available virtual media!!")
         wait_for_cd_device()
         check_cd_config()
@@ -353,8 +356,6 @@ def main():
         if os_net_config:
             _configure_static_net(os_net_config)
 
-        LOG.debug("Erasing old filesystems")
-        utils.execute('/usr/bin/erase-oldfs.sh')
 
 
 if __name__ == "__main__":
