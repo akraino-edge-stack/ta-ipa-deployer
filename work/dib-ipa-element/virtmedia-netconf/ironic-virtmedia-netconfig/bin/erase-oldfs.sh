@@ -16,41 +16,55 @@
 
 SYS_BLOCK="/sys/class/block"
 
-function is_partition(){
-    device=$1
-    if [ -e $SYS_BLOCK/$device/partition ];then
-        return 0
-    else
+if ( grep -q "^flags.*hypervisor" /proc/cpuinfo ); then
+    echo "Not excuting in Virtual machine"
+else
+    function is_partition(){
+        device=$1
+        if [ -e $SYS_BLOCK/$device/partition ];then
+            return 0
+        else
+            return 1
+        fi
+    }
+
+    function is_removable(){
+        device=$1
+        sysdev=$SYS_BLOCK/$device
+        if ( is_partition $device );then
+            removable=$(readlink -f $sysdev/..)/removable
+        else
+            removable=$sysdev/removable
+        fi
+        if [ -e $removable ] && [ $(cat $removable) -eq 1 ];then
+            return 0
+        else
+            return 1
+        fi
+
+    }
+
+    function is_loop(){
+        device=$1
+        if [ -e $SYS_BLOCK/$device/loop ]; then
+            return 0
+        fi
         return 1
-    fi
-}
-
-function is_removable(){
-    device=$1
-    sysdev=$SYS_BLOCK/$device
-    if ( is_partition $device );then
-        removable=$(readlink -f $sysdev/..)/removable
-    else
-        removable=$sysdev/removable
-    fi
-    if [ -e $removable ] && [ $(cat $removable) -eq 1 ];then
-        return 0
-    else
-        return 1
-    fi
-
-}
-
-device_list=$(ls $SYS_BLOCK)
-read -r -a hd_devices <<< $device_list
+    }
 
 
-for hd_dev in ${hd_devices[@]}; do
-    if [ -b /dev/$hd_dev ] && (( is_removable $hd_dev ) || ( is_partition $hd_dev )); then
-        echo "Removable or partition $hd_dev. Skipping..."
-        continue
-    fi
-    wipefs --all /dev/$hd_dev
-    sgdisk -Z -o /dev/$hd_dev
-    dd if=/dev/zero of=/dev/$hd_dev bs=1M count=200
-done
+    device_list=$(ls $SYS_BLOCK)
+    read -r -a hd_devices <<< $device_list
+
+
+    for hd_dev in ${hd_devices[@]}; do
+        if [ -b /dev/$hd_dev ] && (( is_removable $hd_dev ) || ( is_partition $hd_dev ) || ( is_loop $hd_dev )); then
+            echo "Removable or partition $hd_dev. Skipping..."
+            continue
+        fi
+        wipefs --all /dev/$hd_dev
+        sgdisk -Z -o /dev/$hd_dev
+        dd if=/dev/zero of=/dev/$hd_dev bs=1M count=200
+    done
+    partprobe
+fi
