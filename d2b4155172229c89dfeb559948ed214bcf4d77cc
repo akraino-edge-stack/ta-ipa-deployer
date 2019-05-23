@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4c5c67e4_1a32f30b",
+        "filename": "work/dib-ipa-element/virtmedia-netconf/ironic-virtmedia-netconfig/bin/erase-oldfs.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 205
+      },
+      "writtenOn": "2019-05-23T09:19:00Z",
+      "side": 1,
+      "message": "Hi this branch is taken, if it\u0027s on a virtual machine!!!\nRemove \"Not \"",
+      "revId": "d2b4155172229c89dfeb559948ed214bcf4d77cc",
+      "serverId": "4cada01b-0314-4fe0-84a1-f9ddc89863f9",
+      "unresolved": true
+    }
+  ]
+}
