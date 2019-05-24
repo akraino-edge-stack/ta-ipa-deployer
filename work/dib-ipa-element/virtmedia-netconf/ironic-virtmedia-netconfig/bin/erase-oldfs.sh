@@ -61,6 +61,8 @@ else
         if [ -b /dev/$hd_dev ] && (( is_removable $hd_dev ) || ( is_partition $hd_dev ) || ( is_loop $hd_dev )); then
             echo "Removable or partition $hd_dev. Skipping..."
             continue
+        elif ! [ -b /dev/$hd_dev ]; then
+             continue
         fi
         wipefs --all /dev/$hd_dev
         sgdisk -Z -o /dev/$hd_dev
