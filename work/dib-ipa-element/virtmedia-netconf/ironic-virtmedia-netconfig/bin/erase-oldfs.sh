@@ -66,7 +66,9 @@ else
         fi
         wipefs --all /dev/$hd_dev
         sgdisk -Z -o /dev/$hd_dev
-        dd if=/dev/zero of=/dev/$hd_dev bs=1M count=200
+        dd if=/dev/zero of=/dev/$hd_dev bs=1M count=1
     done
+    sync
+    udevadm settle
     partprobe
 fi
