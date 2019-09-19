@@ -32,6 +32,7 @@ function show_options() {
     echo "    -o output filename "
     echo "    -i initrd "
     echo "    -k kernel "
+    echo "    -e efiboot.img (optional on x86) "
 }
 
 function cleanup() {
@@ -51,7 +52,7 @@ function v_print() {
 
 
 # Parse command line options
-ARGS=`getopt -o "o:i:k:" -l "output,initrd,kernel:" \
+ARGS=`getopt -o "o:i:k:e:" -l "output,initrd,kernel,efiboot:" \
       -n "$SCRIPTNAME" -- "$@"`
 if [ $? -ne 0 ];
 then
@@ -65,6 +66,7 @@ while true ; do
         -o) OUTPUT_FILENAME=$2; shift 2 ;;
         -i) INITRD=$2; shift 2 ;;
         -k) KERNEL=$2; shift 2 ;;
+        -e) EFIBOOT=$2; shift 2 ;;
         # *)  show_options ; exit 1 ;;
         --) shift; break ;;
     esac
@@ -89,28 +91,33 @@ if [ -z "$KERNEL" ]; then
     exit 1
 fi
 
+if [ "$(uname -m)" != 'x86_64' ] && [ -z "$EFIBOOT" ]; then
+    err_print "efiboot.img not provided."
+    show_options
+    exit 1
+fi
 # Create a temporary build directory for holiding the contents of iso
 TMP_IMAGE_DIR="$TMP_BUILD_DIR/image"
 v_print "Creating temporary directory $TMP_IMAGE_DIR"
 mkdir -p "$TMP_IMAGE_DIR"
 
-# Copy isolinux bin to the isolinux directory
-mkdir -p "$TMP_IMAGE_DIR/isolinux"
-v_print "Copying isolinux.bin"
-if [ -f /usr/share/syslinux/isolinux.bin ]
-then
-    cp /usr/share/syslinux/isolinux.bin "$TMP_IMAGE_DIR/isolinux"
+if [ "$(uname -m)" = 'x86_64' ]; then
+    # Copy isolinux bin to the isolinux directory
+    mkdir -p "$TMP_IMAGE_DIR/isolinux"
+    v_print "Copying isolinux.bin"
+    if [ -f /usr/share/syslinux/isolinux.bin ]
+    then
+        cp /usr/share/syslinux/isolinux.bin "$TMP_IMAGE_DIR/isolinux"
 
-elif [ -f /usr/lib/syslinux/isolinux.bin ]
-then
-    cp /usr/lib/syslinux/isolinux.bin "$TMP_IMAGE_DIR/isolinux"
-else
-    err_print "Could not find isolinux.bin. Install syslinux?"
-    cleanup
-    exit 1
+    elif [ -f /usr/lib/syslinux/isolinux.bin ]
+    then
+        cp /usr/lib/syslinux/isolinux.bin "$TMP_IMAGE_DIR/isolinux"
+    else
+        err_print "Could not find isolinux.bin. Install syslinux?"
+        cleanup
+        exit 1
+    fi
 fi
-
-
 # Copy initrd, kernel
 v_print "Copying kernel to $TMP_IMAGE_DIR/vmlinuz"
 cp $KERNEL "$TMP_IMAGE_DIR/vmlinuz"
@@ -128,9 +135,10 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-# Generate isolinux.cfg for default booting
-v_print "Generating isolinux.cfg"
-echo "\
+if [ "$(uname -m)" = 'x86_64' ]; then
+    # Generate isolinux.cfg for default booting
+    v_print "Generating isolinux.cfg"
+    echo "\
 DEFAULT install
 LABEL install
     menu label "Install image"
@@ -138,6 +146,7 @@ LABEL install
     append initrd=/initrd boot_method=vmedia console=tty0 console=ttyS1,115200 selinux=0 --
 TIMEOUT 5
 PROMPT 0 " > "$TMP_IMAGE_DIR/isolinux/isolinux.cfg"
+fi
 
 # Convert relative path output filename to absolute path
 echo $OUTPUT_FILENAME | grep -q '^/'
@@ -145,9 +154,29 @@ if [ $? -ne 0 ]; then
     OUTPUT_FILENAME="$PWD/$OUTPUT_FILENAME"
 fi
 
+# On x86_64 platforms, use isolinux for BIOS support
+if [ "$(uname -m)" = 'x86_64' ]; then
+    MKISOFS_ARGS+="-b isolinux/isolinux.bin -no-emul-boot \
+                   -boot-load-size 4 -boot-info-table"
+fi
+
+# If set, convert relative efiboot.img path to absolute path
+if [ -z "$EFIBOOT" ]; then
+    echo $EFIBOOT | grep -q '^/'
+    if [ $? -ne 0 ]; then
+        EFIBOOT="$PWD/$EFIBOOT"
+    fi
+    MKISOFS_ARGS+="-eltorito-alt-boot -e $EFIBOOT -no-emul-boot"
+fi
 # Create the ISO
 v_print "Generating the ISO"
-cd $TMP_IMAGE_DIR && $MKISOFS -r -V "INSTALL_IMAGE" -cache-inodes -J -l -b isolinux/isolinux.bin  -no-emul-boot -boot-load-size 4 -boot-info-table -o $OUTPUT_FILENAME .
+cd $TMP_IMAGE_DIR && $MKISOFS -r -V "INSTALL_IMAGE" -cache-inodes -J -l $MKISOFS_ARGS -o $OUTPUT_FILENAME .
+
+if [ $? -ne 0 ]; then
+    err_print "Failed generating the ISO"
+    cleanup
+    exit 1
+fi
 
 # Cleanup
 cleanup
