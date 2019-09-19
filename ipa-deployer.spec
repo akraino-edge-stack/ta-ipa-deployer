@@ -7,8 +7,10 @@ License: %{_platform_licence}
 Source0: %{name}-%{version}.tar.gz
 Vendor:  %{_platform_vendor}
 
-BuildArch: noarch
-BuildRequires: diskimage-builder qemu-img-ev which sudo PyYAML e2fsprogs syslinux genisoimage wget kernel python2-ironic-python-agent python-ironic-lib python-devel
+BuildRequires: diskimage-builder qemu-img-ev which sudo PyYAML e2fsprogs genisoimage wget kernel python2-ironic-python-agent python-ironic-lib python-devel
+%ifarch x86_64 amd64
+BuildRequires: syslinux
+%endif
 
 %define dib_selinuxfile elements/rpm-distro/cleanup.d/99-selinux-fixfiles-restore
 %define dib_epel elements/epel/pre-install.d/05-rpm-epel-release

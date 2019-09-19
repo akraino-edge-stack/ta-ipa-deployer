@@ -70,6 +70,12 @@ while true ; do
     esac
 done
 
+if [ "$(uname -m)" != 'x86_64' ]; then
+    err_print "Only x86_64 platform architecture is currently supported."
+    cleanup
+    exit 1
+fi
+
 # Verify whether kernel, initrd, and the image file is present
 if [ -z "$OUTPUT_FILENAME" ]; then
     err_print "Output filename not provided."
