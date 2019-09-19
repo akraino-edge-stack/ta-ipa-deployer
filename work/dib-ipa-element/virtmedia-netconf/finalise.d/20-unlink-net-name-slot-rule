@@ -21,4 +21,6 @@ fi
 set -eu
 set -o pipefail
 
-unlink /etc/udev/rules.d/80-net-name-slot.rules
+if [ -e /etc/udev/rules.d/80-net-name-slot.rules ]; then
+    unlink /etc/udev/rules.d/80-net-name-slot.rules
+fi
