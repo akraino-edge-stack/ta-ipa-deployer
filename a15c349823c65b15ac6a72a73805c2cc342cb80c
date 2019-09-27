@@ -22,6 +22,30 @@
       "revId": "a15c349823c65b15ac6a72a73805c2cc342cb80c",
       "serverId": "4cada01b-0314-4fe0-84a1-f9ddc89863f9",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e685c691_36d2ff4e",
+        "filename": "ipa-deployer.spec",
+        "patchSetId": 5
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 137
+      },
+      "writtenOn": "2019-09-27T12:25:59Z",
+      "side": 1,
+      "message": "It\u0027s the default, pypi.org. I\u0027ll pin it to 2.26.1, since we use that version in build-tools too.",
+      "parentUuid": "4439df65_4fc59c1a",
+      "range": {
+        "startLine": 35,
+        "startChar": 0,
+        "endLine": 35,
+        "endChar": 34
+      },
+      "revId": "a15c349823c65b15ac6a72a73805c2cc342cb80c",
+      "serverId": "4cada01b-0314-4fe0-84a1-f9ddc89863f9",
+      "unresolved": true
     }
   ]
 }
