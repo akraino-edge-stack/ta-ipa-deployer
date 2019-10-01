@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4cccdfa2_e85866fd",
+        "filename": "ipa-deployer.spec",
+        "patchSetId": 6
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 183
+      },
+      "writtenOn": "2019-10-01T14:55:02Z",
+      "side": 1,
+      "message": "note: my comments will be all related to trying to minimize arch specific code as much as possible\nso the first one: what would happen if we would simply install all build tools for all archs? wouldn\u0027t the arch specific build simply use those it needs, and simply ignore the rest?",
+      "revId": "0bf6bf332ab62779c857f01f23d3c991c7302d93",
+      "serverId": "4cada01b-0314-4fe0-84a1-f9ddc89863f9",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "97f1f267_ed20df11",
+        "filename": "ipa-deployer.spec",
+        "patchSetId": 6
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 183
+      },
+      "writtenOn": "2019-10-01T14:55:02Z",
+      "side": 1,
+      "message": "if the x86 build works with the new DIB, we could simply use the new version for both",
+      "revId": "0bf6bf332ab62779c857f01f23d3c991c7302d93",
+      "serverId": "4cada01b-0314-4fe0-84a1-f9ddc89863f9",
+      "unresolved": true
+    }
+  ]
+}
