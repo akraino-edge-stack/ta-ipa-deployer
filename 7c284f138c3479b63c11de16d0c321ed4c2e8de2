@@ -46,6 +46,29 @@
       "revId": "7c284f138c3479b63c11de16d0c321ed4c2e8de2",
       "serverId": "4cada01b-0314-4fe0-84a1-f9ddc89863f9",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d386ccd8_8d8dfb7b",
+        "filename": "work/iso-image-create",
+        "patchSetId": 11
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 251
+      },
+      "writtenOn": "2019-11-06T10:18:53Z",
+      "side": 1,
+      "message": "This breaks baremetal provisioning.\nFurthermore, isohybrid is not needed for the IPA images.",
+      "range": {
+        "startLine": 209,
+        "startChar": 0,
+        "endLine": 216,
+        "endChar": 2
+      },
+      "revId": "7c284f138c3479b63c11de16d0c321ed4c2e8de2",
+      "serverId": "4cada01b-0314-4fe0-84a1-f9ddc89863f9",
+      "unresolved": false
     }
   ]
 }
