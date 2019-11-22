@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3b5aef40_8611a971",
+        "filename": "ipa-deployer.spec",
+        "patchSetId": 12
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 43
+      },
+      "writtenOn": "2019-11-22T21:52:14Z",
+      "side": 0,
+      "message": "I wonder if this is intentional or a mistake. I would have expected the image to come from https://gerrit.akraino.org/r/gitweb?p\u003dta/manifest.git;a\u003dblob;f\u003dbuild_config.ini;h\u003d6c00fc52686ae87904c8735ede369454c25c5708;hb\u003dHEAD rather than being hardcoded here.",
+      "revId": "a45f45480df7dc03311da9a4f0f3e63ab2863217",
+      "serverId": "4cada01b-0314-4fe0-84a1-f9ddc89863f9",
+      "unresolved": false
+    }
+  ]
+}
