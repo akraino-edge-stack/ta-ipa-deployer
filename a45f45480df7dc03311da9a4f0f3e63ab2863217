@@ -16,6 +16,24 @@
       "revId": "a45f45480df7dc03311da9a4f0f3e63ab2863217",
       "serverId": "4cada01b-0314-4fe0-84a1-f9ddc89863f9",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d846e8c8_ca5947bd",
+        "filename": "ipa-deployer.spec",
+        "patchSetId": 12
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 137
+      },
+      "writtenOn": "2019-11-23T22:11:31Z",
+      "side": 0,
+      "message": "This is intentional, afaik build_config.ini is only used for the golden image build and requires extra parsing for its variables to be used (currently only present in create_golden_image.sh, not for the TA RPM builds); so unfortunately I don\u0027t think we can reuse those variables here.\n\nNote that on x86 golden image uses version 1809, while here we use 1801 - I left this misalignment unchanged to limit the impact of this change; although I think we can later align them.",
+      "parentUuid": "3b5aef40_8611a971",
+      "revId": "a45f45480df7dc03311da9a4f0f3e63ab2863217",
+      "serverId": "4cada01b-0314-4fe0-84a1-f9ddc89863f9",
+      "unresolved": false
     }
   ]
 }
